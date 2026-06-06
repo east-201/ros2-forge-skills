@@ -194,4 +194,4 @@ docs/                      输出 schema 和使用说明
 
 ## 使用效果
 
-他竟然真的能让mimov2.5pro变聪明
+他竟然真的能让mimov2.5pro变聪明!
