@@ -235,3 +235,14 @@ evals/                     skill 自测样例
 workspace_template/        推荐工作区模板
 docs/                      输出 schema 和使用说明
 ```
+
+## 安全边界
+
+- 默认不执行会导致底盘、机械臂、升降台、夹爪、电机、继电器动作的命令。
+- 默认不执行 reboot/poweroff、网络配置修改、删除文件、写入密钥或密码。
+- 没有真实硬件证据，不得声称 V5。
+- worker 不能自证 fixed，必须经过 merge barrier。
+
+## 使用效果
+
+他竟然真的能让mimov2.5pro变聪明!

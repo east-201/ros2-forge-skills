@@ -236,3 +236,10 @@ evals/                     skill evaluation prompts
 workspace_template/        recommended workspace template
 docs/                      output schemas and guides
 ```
+
+## Safety boundaries
+
+- Do not run motion commands for a base, arm, lift, gripper, motor, relay, or actuator by default.
+- Do not run reboot/poweroff, network edits, file deletion, or secret/key/password writes by default.
+- Do not claim V5 hardware verification without hardware evidence.
+- A worker cannot self-certify a fix; merge barrier review is required.
