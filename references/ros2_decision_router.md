@@ -3,7 +3,7 @@
 ## Task classes
 
 ### design
-User wants to design a new package, node, pipeline, behavior, or architecture. Use `/ros2-design`.
+User wants to design a new package, node, pipeline, behavior, or architecture. Use `/ros2-design`. First run requirement intake and ask blocking questions before final design.
 
 ### contract
 User has a rough design and wants stable topic/service/action/param/launch/QoS/lifecycle/test contracts. Use `/ros2-contract`.
@@ -40,3 +40,7 @@ User says nodes do not start, topics have no data, QoS may mismatch, lifecycle i
 - tests: `ros2_testing_rules.md`
 - SSH/board: `ros2_ssh_board_access_rules.md`
 - runtime: `ros2_runtime_diagnose_rules.md`
+
+
+- design intake / clarification: `ros2_design_intake_rules.md`
+- fix status and scan history sync: `ros2_change_traceability_rules.md`

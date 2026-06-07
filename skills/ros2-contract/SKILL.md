@@ -12,6 +12,7 @@ description: Convert ROS2 design decisions into verifiable package, interface, p
 ## 必读 references
 
 - `common_session_protocol.md`
+- `ros2_design_intake_rules.md`
 - `ros2_interface_contract_rules.md`
 - `ros2_qos_rules.md`
 - `ros2_lifecycle_rules.md`
@@ -30,6 +31,7 @@ description: Convert ROS2 design decisions into verifiable package, interface, p
 8. 定义 lifecycle/resource model。
 9. 定义 callback/executor plan。
 10. 定义 test/verification plan。
+11. 使用 `design-consistency-reviewer` 复查 contract 是否覆盖用户要求、接口是否连通、配置是否可加载。
 
 ## 输出文件
 
@@ -44,6 +46,8 @@ description: Convert ROS2 design decisions into verifiable package, interface, p
 07_CALLBACK_EXECUTOR_CONTRACT.md
 08_TEST_VERIFICATION_CONTRACT.md
 09_IMPLEMENTATION_GUARDRAILS.md
+10_CONTRACT_REVIEW.md
+11_REQUIREMENT_COVERAGE_MATRIX.md
 SESSION_INDEX.md
 SESSION_META.json
 ```
@@ -56,3 +60,5 @@ contract 应该稳定、具体、可验证。不要写“适当处理”“尽�
 
 - 使用 `contract-architect` 生成 contract 初稿。
 - 使用 `ros2-interface-reviewer`、`ros2-qos-executor-reviewer`、`ros2-launch-config-reviewer` 交叉复核 contract 是否可实现、可验证。
+
+- 使用 `design-consistency-reviewer` 复查 contract 与用户需求、接口连接、函数职责、launch/config 是否一致。

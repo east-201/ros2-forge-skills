@@ -12,6 +12,7 @@ description: Triage review issues and write executable fix sets, ICR decisions, 
 ## 必读 references
 
 - `subagent_dispatch_matrix.md`
+- `parallel_subagent_orchestration_rules.md`
 - `common_session_protocol.md`
 - `parallel_subagent_protocol.md`
 - `verification_levels.md`
@@ -25,7 +26,7 @@ description: Triage review issues and write executable fix sets, ICR decisions, 
 4. 按根因合并 fix set。
 5. 标记 P0/P1/P2/P3。
 6. 标记 ICR：接口、launch、config、package、硬件行为变化必须 ICR。
-7. 生成 worker lane。
+7. 生成 worker lane，并标记哪些 lane 可以并行、哪些必须串行。
 8. 生成 reviewer checklist 和 verification plan。
 
 ## Fix Set 格式
@@ -44,6 +45,8 @@ Implementation steps:
 Verification commands:
 Rollback plan:
 Reviewer checklist:
+Parallelizable?: yes/no
+Depends on lanes:
 ```
 
 ## 输出文件
@@ -67,3 +70,5 @@ SESSION_META.json
 - 先用 `explorer-source-mapper` 复核 issue evidence 和相关文件。
 - 对接口、QoS、lifecycle、launch/config、硬件安全问题，分别调用对应 reviewer 做 false-positive 检查。
 - 输出的每个 worker lane 必须能直接交给 `worker-lane-patch-executor`。
+- 可以并行的 lane 必须文件不重叠、接口不互相依赖、验证命令互不冲突。
+- 不能并行的 lane 必须写明依赖关系和串行顺序。

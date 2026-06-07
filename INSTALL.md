@@ -3,14 +3,14 @@
 ## Linux/macOS
 
 ```bash
-cd ROS2_Forge_Skills_v4_2
+cd ROS2_Forge_Skills_v4_3
 ./install.sh --overwrite /path/to/ros2_ws
 ```
 
 ## Windows PowerShell
 
 ```powershell
-cd ROS2_Forge_Skills_v4_2
+cd ROS2_Forge_Skills_v4_3
 .\install.ps1 -Target C:\path\to\ros2_ws -Overwrite
 ```
 

@@ -57,4 +57,4 @@ Start Claude Code in this workspace and run:
 \`\`\`
 EOF
 
-echo "OK: ROS2 Forge Skills v4.2 installed into $TARGET_DIR/.claude"
+echo "OK: ROS2 Forge Skills v4.4 installed into $TARGET_DIR/.claude"

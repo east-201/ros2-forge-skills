@@ -75,6 +75,7 @@ ros2_perception_audio_camera_rules.md
 ros2_testing_rules.md
 ros2_runtime_diagnose_rules.md
 ros2_ssh_board_access_rules.md
+parallel_subagent_orchestration_rules.md
 ```
 
 ## Subagent 机制
@@ -94,6 +95,7 @@ merge-barrier-reviewer          # 修复后 accept/reject，worker 不能自证 
 ros2-test-verifier              # V1-V5 验证证据分类
 runtime-diagnoser               # runtime snapshot 分析
 ssh-board-operator              # SSH 只读板端诊断
+parallel-subagent-coordinator    # 合并并行 subagent lane 的结论
 ```
 
 ## 安装
@@ -145,6 +147,55 @@ docs/ros2-design/2026-06-07-145210-contract/
 
 `CURRENT.md` 只记录最新 session 指针，不覆盖旧 session。只有用户明确说“继续当前 session / resume / update current”时，才允许复用旧目录。
 
+
+## v4.4 新增：Design 问题不设上限，并支持并行 subagent lane
+
+`/ros2-design` 的问题策略改成“不设硬性数量上限”。agent 不再被 6-12 个问题限制，而是按设计正确性需要提问，并将问题分成：
+
+```text
+P0 blocking  # 不回答可能导致架构方向错误
+P1 quality   # 不回答也能设计，但必须写明假设和风险
+P2 future    # 不影响本轮实现，放入 backlog 或 ADR
+```
+
+如果问题很多，第一轮优先问 P0，P1/P2 会写入 intake 文档，不会因为数量限制而遗漏关键设计条件。
+
+同时新增并行 subagent 编排规则。设计、审查、验证和运行时诊断可以按接口、QoS/executor、launch/config、lifecycle、安全、测试、SSH/runtime 等 lane 并行分析，再由主 agent 或 `parallel-subagent-coordinator` 合并输出：
+
+```text
+PARALLEL_LANE_SUMMARY.md
+CONFLICTS_AND_DEPENDENCIES.md
+MERGED_DECISION.md
+```
+
+## v4.3 新增：设计前问清楚，设计后要复查
+
+`/ros2-design` 现在不是直接输出架构，而是先做 requirement intake 和 brainstorming：
+
+```text
+已知需求 / 已知约束 / 阻塞问题 / 可延后问题 / 假设 / 设计就绪状态
+```
+
+如果缺少关键条件，例如接口上下游、节点职责、launch/config、QoS、lifecycle、硬件安全、SSH/板端环境或验证方式，agent 应先问问题，不应直接给最终设计。设计完成后还会由 `design-consistency-reviewer` 复查：用户要求是否覆盖、接口是否连通、参数和 launch/config 是否一一对应、函数职责是否闭合、验证计划是否能证明设计成立。
+
+## v4.3 新增：Fix 后同步文档和 Scan 历史
+
+`/ros2-fix` 在 merge barrier 接受修复后，必须更新当前 fix session：
+
+```text
+55_FIX_STATUS_REGISTER.md
+56_CHANGE_IMPACT_SUMMARY.md
+57_SCAN_HISTORY_APPEND_LOG.md
+```
+
+如果修复改变了 topic/service/action、参数、launch/config、QoS、lifecycle、package exports 或硬件行为，还会向最近一次 scan session 追加：
+
+```text
+docs/ros2-quality/<LATEST_SCAN_RUN_ID>-scan/99_CHANGE_LOG_FROM_FIXES.md
+```
+
+下一次 `/ros2-scan` 会读取最近一次 scan 和这个 change log 作为参考，但仍然创建新的 RUN_ID 目录，不覆盖旧报告。
+
 ## SSH 运行时诊断
 
 先测试 SSH：
@@ -184,14 +235,3 @@ evals/                     skill 自测样例
 workspace_template/        推荐工作区模板
 docs/                      输出 schema 和使用说明
 ```
-
-## 安全边界
-
-- 默认不执行会导致底盘、机械臂、升降台、夹爪、电机、继电器动作的命令。
-- 默认不执行 reboot/poweroff、网络配置修改、删除文件、写入密钥或密码。
-- 没有真实硬件证据，不得声称 V5。
-- worker 不能自证 fixed，必须经过 merge barrier。
-
-## 使用效果
-
-他竟然真的能让mimov2.5pro变聪明!

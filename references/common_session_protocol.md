@@ -42,3 +42,19 @@ SESSION_META.json
 raw/
 facts/
 ```
+
+## Previous scan reference rule
+
+A new `scan` session must create a fresh RUN_ID, but it should also read the latest previous scan session as historical context. The previous scan may be used to compare interface/config drift and to read append-only fix notes from `99_CHANGE_LOG_FROM_FIXES.md`.
+
+Do not write scan outputs into the previous scan directory, except for the explicit append-only change log written after an accepted fix.
+
+## Fix-to-scan append exception
+
+After an accepted fix, documentation sync may append to the latest scan session:
+
+```text
+99_CHANGE_LOG_FROM_FIXES.md
+```
+
+This keeps the historical baseline useful without overwriting its original reports.

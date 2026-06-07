@@ -13,6 +13,7 @@ description: Extract as-built facts from an existing ROS2 workspace into Markdow
 
 - `subagent_dispatch_matrix.md`
 - `common_session_protocol.md`
+- `ros2_change_traceability_rules.md`
 - `ros2_workspace_build_rules.md`
 - `ros2_interface_contract_rules.md`
 - `ros2_launch_config_rules.md`
@@ -20,10 +21,11 @@ description: Extract as-built facts from an existing ROS2 workspace into Markdow
 
 ## RUN_ID 规则
 
-默认执行：
+默认执行，并读取最近一次 scan 作为参考但不作为输出目标：
 
 ```bash
 python3 .claude/tools/ros2_session.py new scan
+python3 .claude/tools/ros2_scan_history.py latest --kind scan
 ```
 
 只有用户明确要求 resume 时才执行：
@@ -51,9 +53,12 @@ python3 .claude/tools/ros2_quality_static_scan.py --root . --out docs/ros2-quali
 06_QOS_AS_BUILT.md
 07_LIFECYCLE_AS_BUILT.md
 08_CALLBACK_EXECUTOR_AS_BUILT.md
-09_HARDWARE_SURFACE.md
-10_TEST_AND_BUILD_BASELINE.md
-11_UNKNOWN_REGISTER.md
+09_PREVIOUS_SCAN_REFERENCE.md
+10_SCAN_DELTA_FROM_PREVIOUS.md
+11_HARDWARE_SURFACE.md
+12_TEST_AND_BUILD_BASELINE.md
+13_UNKNOWN_REGISTER.md
+99_CHANGE_LOG_FROM_FIXES.md
 facts/*.json
 raw/*.json
 SESSION_INDEX.md
@@ -62,4 +67,16 @@ SESSION_META.json
 
 ## 重点
 
-facts 是后续 review/plan/fix 的基础。如果无法确认，写入 `11_UNKNOWN_REGISTER.md`，不要猜。
+facts 是后续 review/plan/fix 的基础。如果无法确认，写入 `13_UNKNOWN_REGISTER.md`，不要猜。
+
+## Previous scan 参考规则
+
+新的 scan 仍然必须创建新 RUN_ID，但应读取最近一次 `<RUN_ID>-scan/` 作为历史参考：
+
+```bash
+python3 .claude/tools/ros2_scan_history.py latest --kind scan
+```
+
+如果上一轮 fix 在旧 scan 中追加了 `99_CHANGE_LOG_FROM_FIXES.md`，本次 scan 必须重点复查其中列出的 interface/config/launch/QoS/lifecycle/package 变更，并输出 `10_SCAN_DELTA_FROM_PREVIOUS.md`。
+
+禁止把新 scan 输出写入旧 scan 目录。

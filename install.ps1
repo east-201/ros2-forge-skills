@@ -39,4 +39,4 @@ Start Claude Code in this workspace and run:
 ````
 "@ | Set-Content -Encoding UTF8 (Join-Path $Claude "ROS2_FORGE_INSTALLED.md")
 
-Write-Host "OK: ROS2 Forge Skills v4.2 installed into $Claude"
+Write-Host "OK: ROS2 Forge Skills v4.4 installed into $Claude"

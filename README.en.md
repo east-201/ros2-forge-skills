@@ -76,6 +76,7 @@ ros2_perception_audio_camera_rules.md
 ros2_testing_rules.md
 ros2_runtime_diagnose_rules.md
 ros2_ssh_board_access_rules.md
+parallel_subagent_orchestration_rules.md
 ```
 
 ## Subagents
@@ -95,6 +96,7 @@ merge-barrier-reviewer          # accepts/rejects worker changes
 ros2-test-verifier              # classifies V1-V5 evidence
 runtime-diagnoser               # analyzes runtime snapshots
 ssh-board-operator              # read-only SSH diagnostics
+parallel-subagent-coordinator    # merges parallel subagent lane outputs
 ```
 
 ## Installation
@@ -146,6 +148,55 @@ docs/ros2-design/2026-06-07-145210-contract/
 
 `CURRENT.md` is only a pointer to the latest session. Old sessions are not overwritten. Reusing a previous session is allowed only when the user explicitly asks to resume/update the current session.
 
+
+## v4.4: Unlimited design questions and parallel subagent lanes
+
+`/ros2-design` no longer uses a hard numeric question limit. The agent should ask as many questions as needed for design correctness and classify them as:
+
+```text
+P0 blocking  # unanswered questions may make the architecture wrong
+P1 quality   # design can proceed, but assumptions and risks must be recorded
+P2 future    # not needed for this iteration; keep as backlog or ADR candidates
+```
+
+When many questions exist, the first round should prioritize P0 questions. P1/P2 questions are kept in the intake document instead of being dropped due to a question count limit.
+
+Parallel subagent orchestration is also supported. Design, review, verification, and runtime diagnosis can split independent work into interface, QoS/executor, launch/config, lifecycle, safety, testing, SSH/runtime, and source-mapping lanes. The main agent or `parallel-subagent-coordinator` then merges the results into:
+
+```text
+PARALLEL_LANE_SUMMARY.md
+CONFLICTS_AND_DEPENDENCIES.md
+MERGED_DECISION.md
+```
+
+## v4.3: Ask before design, review after design
+
+`/ros2-design` now starts with requirement intake and brainstorming instead of jumping directly into architecture:
+
+```text
+known requirements / known constraints / blocking questions / deferrable questions / assumptions / design readiness
+```
+
+If critical information is missing, such as upstream/downstream interfaces, node responsibilities, launch/config, QoS, lifecycle, hardware safety, SSH/board environment, or verification method, the agent should ask questions first. After drafting, `design-consistency-reviewer` checks requirement coverage, interface connectivity, parameter and launch/config alignment, module/function closure, and whether the verification plan can prove the design.
+
+## v4.3: Sync fix docs and scan history after accepted fixes
+
+After `merge-barrier-reviewer` accepts a fix, `/ros2-fix` must update the active fix session:
+
+```text
+55_FIX_STATUS_REGISTER.md
+56_CHANGE_IMPACT_SUMMARY.md
+57_SCAN_HISTORY_APPEND_LOG.md
+```
+
+If the fix changes topics/services/actions, parameters, launch/config, QoS, lifecycle, package exports, or hardware behavior, it appends an entry to the latest scan session:
+
+```text
+docs/ros2-quality/<LATEST_SCAN_RUN_ID>-scan/99_CHANGE_LOG_FROM_FIXES.md
+```
+
+The next `/ros2-scan` reads the latest previous scan and this change log as reference, but still creates a fresh RUN_ID directory and never overwrites the previous scan.
+
 ## SSH runtime diagnosis
 
 Test SSH first:
@@ -185,10 +236,3 @@ evals/                     skill evaluation prompts
 workspace_template/        recommended workspace template
 docs/                      output schemas and guides
 ```
-
-## Safety boundaries
-
-- Do not run motion commands for a base, arm, lift, gripper, motor, relay, or actuator by default.
-- Do not run reboot/poweroff, network edits, file deletion, or secret/key/password writes by default.
-- Do not claim V5 hardware verification without hardware evidence.
-- A worker cannot self-certify a fix; merge barrier review is required.

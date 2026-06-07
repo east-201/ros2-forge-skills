@@ -13,6 +13,7 @@ description: Run V1-V5 ROS2 verification and bringup checks locally or through S
 
 - `subagent_dispatch_matrix.md`
 - `verification_levels.md`
+- `ros2_change_traceability_rules.md`
 - `ros2_testing_rules.md`
 - `ros2_runtime_diagnose_rules.md`
 - 需要 SSH 时读 `ros2_ssh_board_access_rules.md`
@@ -26,6 +27,7 @@ description: Run V1-V5 ROS2 verification and bringup checks locally or through S
 5. V3：launch smoke / local runtime graph。
 6. V4：SSH 板端 dry-run / 真实接口不驱动危险硬件。
 7. V5：真实硬件验证，必须由用户确认或提供证据。
+8. 如果验证目标来自 fix session，验证完成后回写 fix 文档中的验证等级和剩余风险。
 
 ## 输出文件
 
@@ -45,3 +47,14 @@ SESSION_META.json
 
 - 不要为了验证而自动执行危险 motion command。
 - SSH 只看到节点存在，不等于 V5。
+
+## Fix verification 回写
+
+如果本次验证对应某个 fix session，调用 `scan-history-curator` 或手动更新：
+
+```text
+55_FIX_STATUS_REGISTER.md
+56_CHANGE_IMPACT_SUMMARY.md
+```
+
+不要只生成新的 verify 目录而忘记把 active fix session 中的问题状态改成 fixed/partial/needs-follow-up。

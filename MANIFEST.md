@@ -33,3 +33,24 @@
 - `ros2_ssh_probe.py`
 - `ros2_topic_qos_matrix.py`
 - `verify_run_id_no_overwrite.py`
+- `ros2_scan_history.py`
+
+## v4.4 additions
+
+- `agents/parallel-subagent-coordinator.md`
+- `subagent_templates/parallel_subagent_coordinator.md`
+- `references/parallel_subagent_orchestration_rules.md`
+- Updated `ros2_design_intake_rules.md` to remove the hard question limit and use P0/P1/P2 grouping.
+- Updated `/ros2-design` to support flexible parallel subagent lanes and synthesis documents.
+
+## v4.3 additions
+
+- `agents/design-requirement-questioner.md`
+- `agents/design-consistency-reviewer.md`
+- `agents/scan-history-curator.md`
+- `references/ros2_design_intake_rules.md`
+- `references/ros2_change_traceability_rules.md`
+- `tools/ros2_scan_history.py`
+- `docs/design_intake_schema.md`
+- `docs/fix_status_update_schema.md`
+- `docs/scan_delta_append_schema.md`
